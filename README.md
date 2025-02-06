@@ -14,7 +14,7 @@ AD: `phongbat.com`
 
 WEb: 'home.phongbat.com'
 
-![](/Images/Picture1.png)
+![](/Images/picture1.png)
 
 Hệ thống nội bộ gồm 4 máy:
 - `RootDC (Active Directory)`: Window Server 2019
@@ -31,7 +31,7 @@ Về hệ thống C2 Server, gồm 3 thành phần chính:
 - `Havoc Client`: Giao diện chính của framework, giúp cho các thành viên redteam liên lạc, tương tác với các máy bị xâm chiếm.
 - `Havoc Agent`: payload được khởi chạy bởi máy tính mục tiêu, nhận lệnh và thực thi lệnh do server yêu cầu.
 
-![](/Images/Picture2.png)
+![](/Images/picture2.png)
 
 Attacker có thể xâm nhập vào hệ thống thông qua 2 cách tiếp cận: exploit từ Web01 đi vào, tải và thực thi file agent, sau đó gửi malware phishing cho WS01, từ đó máy WS01 này sẽ tải agent và thực thi để thêm vào C2 Server, duy trì sự hiện diện trong hệ thống.
 
