@@ -207,22 +207,37 @@ Ta thử sử dụng credential này bằng rdp.
 
 ![](/Images/Picture22.png)
 
-Sau đó ta sẽ tạo backdoor bằng Golden Ticket để duy trì quyền truy cập lâu dài.
+Tạo Backdoor Vĩnh Viễn Bằng Golden Ticket Attack vì:
+- Vé Kerberos giả không bao giờ hết hạn, trừ khi krbtgt bị reset hai lần liên tiếp.
+- Có thể giả mạo bất kỳ tài khoản nào, kể cả tài khoản quản trị cấp cao.
+- Không thể bị phát hiện dễ dàng nếu không có giám sát chặt chẽ hoặc công cụ bảo mật mạnh.
+- Tồn tại ngay cả khi tài khoản gốc bị xóa hoặc mật khẩu bị đổi.
 
-Bước đầu tiên chúng ta cần thu thập NTLM của krbtgt và domain SID.
+Sau khi thu thập đủ thông tin và xâm nhập vào hệ thống, mục tiêu tiếp theo của chúng ta là duy trì quyền truy cập lâu dài mà không bị phát hiện. Một trong những kỹ thuật mạnh mẽ nhất để làm điều này trong môi trường Active Directory (AD) chính là Golden Ticket Attack. Đây là một trong những cuộc tấn công nguy hiểm nhất nhắm vào cơ chế xác thực Kerberos, cho phép kẻ tấn công tạo vé truy cập hợp lệ với quyền tối thượng, thậm chí ngay cả khi tài khoản bị vô hiệu hóa hoặc mật khẩu bị thay đổi.
 
-<p align="center">
-    <img src="/Images/Picture23.png" width="49%" />
-    <img src="/Images/Picture23-2.png" width="49%" />
-</p>
+Để thực hiện cuộc tấn công này, chúng ta cần thu thập hai yếu tố quan trọng từ Domain Controller (DC):
 
-Sau khi thu thập được các thông tin cần thiết, ta sử dụng công cụ ticketer.py của Impacket để tạo gold ticket. Một lợi thế của ticketer.py là vé giả được ghi vào tệp .ccache thay vì .kirbi ;vì vậy ta không phải chuyển đổi nó. 
+- NTLM hash của tài khoản krbtgt – Đây là tài khoản chịu trách nhiệm phát hành vé (ticket) Kerberos. Nếu chúng ta có hash của tài khoản này, chúng ta có thể tự tạo vé hợp lệ.
+- Domain SID – Là định danh duy nhất của domain, cần thiết để xác thực vé.
+
+Bằng cách sử dụng công cụ như Mimikatz, chúng ta có thể dễ dàng trích xuất NTLM hash của tài khoản krbtgt và SID của domain.
+
+<p align="center"> <img src="/Images/Picture23.png" width="49%" /> <img src="/Images/Picture23-2.png" width="49%" /> </p>
+
+Sau khi thu thập được các thông tin cần thiết, ta giả mạo vé Kerberos bằng Golden Ticket bằng công cụ ticketer.py của Impacket. Một lợi thế của ticketer.py là vé giả được ghi vào tệp .ccache thay vì .kirbi ;vì vậy ta không phải chuyển đổi nó. 
+
 <p align="center">
     <img src="/Images/Picture24.png" width="49%" />
     <img src="/Images/Picture24-1.png" width="49%" />
 </p>
 
-Ta đặt biến môi trường KRB5CCNAME thành đường dẫn của tệp TeoIT1.ccache. Tiếp theo, ta có thể sử dụng các công cụ thực thi lệnh của Impacket, chẳng hạn như psexec.py , smbexec.py hoặc wmiexec.py , để tải và xác thực bằng ticket, cuối cùng cung cấp cho ta một shell trả về.
+Sau khi tạo vé thành công, chúng ta cần đặt biến môi trường để sử dụng vé này. Bây giờ, chúng ta có thể sử dụng các công cụ như:
+
+- psexec.py – Thực thi lệnh từ xa trên máy mục tiêu.
+- smbexec.py – Tạo shell thông qua SMB.
+- wmiexec.py – Thực thi lệnh thông qua Windows Management Instrumentation (WMI).
+
+Chỉ với một câu lệnh, chúng ta có thể chiếm toàn quyền kiểm soát Domain Controller:
 
 ![](/Images/Picture25.png)
 
