@@ -39,7 +39,11 @@ Attacker có thể xâm nhập vào hệ thống thông qua 2 cách tiếp cận
 #### **2.2.1. Reconnaissance (T1595.003 - Active Scanning).**
 Truy cập vào trang chủ chính `home.phongbat.com' ta chỉ thấy được các giao diện thông thường, test qua vài lỗ hổng trong OWASP nhưng không có gì bất thường.
 
-![](/Images/Picture3.png) ![](/Images/Picture3-1.png)
+<p align="center">
+    <img src="/Images/Picture3.png" width="45%" />
+    <img src="/Images/Picture3-1.png" width="45%" />
+</p>
+
 
 
 Tiến hành scandir xem có thư mục nào ẩn không ta tìm được một vài directory ẩn: `/robots.txt`,`/admin`.
