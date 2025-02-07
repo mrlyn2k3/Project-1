@@ -207,24 +207,24 @@ Ta thử sử dụng credential này bằng rdp.
 
 ![](/Images/Picture22.png)
 
-Tạo Backdoor Vĩnh Viễn Bằng Golden Ticket Attack vì:
+Sau khi thu thập đủ thông tin và xâm nhập vào hệ thống, mục tiêu tiếp theo của chúng ta là duy trì quyền truy cập lâu dài mà không bị phát hiện. Một trong những kỹ thuật mạnh mẽ nhất để làm điều này trong môi trường Active Directory (AD) chính là `Golden Ticket Attack`. Đây là một trong những cuộc tấn công nguy hiểm nhất nhắm vào cơ chế xác thực Kerberos, cho phép kẻ tấn công tạo vé truy cập hợp lệ với quyền tối thượng, thậm chí ngay cả khi tài khoản bị vô hiệu hóa hoặc mật khẩu bị thay đổi.
+
+Tạo Backdoor Vĩnh Viễn Bằng `Golden Ticket Attack` vì:
 - Vé Kerberos giả không bao giờ hết hạn, trừ khi krbtgt bị reset hai lần liên tiếp.
 - Có thể giả mạo bất kỳ tài khoản nào, kể cả tài khoản quản trị cấp cao.
 - Không thể bị phát hiện dễ dàng nếu không có giám sát chặt chẽ hoặc công cụ bảo mật mạnh.
 - Tồn tại ngay cả khi tài khoản gốc bị xóa hoặc mật khẩu bị đổi.
-
-Sau khi thu thập đủ thông tin và xâm nhập vào hệ thống, mục tiêu tiếp theo của chúng ta là duy trì quyền truy cập lâu dài mà không bị phát hiện. Một trong những kỹ thuật mạnh mẽ nhất để làm điều này trong môi trường Active Directory (AD) chính là Golden Ticket Attack. Đây là một trong những cuộc tấn công nguy hiểm nhất nhắm vào cơ chế xác thực Kerberos, cho phép kẻ tấn công tạo vé truy cập hợp lệ với quyền tối thượng, thậm chí ngay cả khi tài khoản bị vô hiệu hóa hoặc mật khẩu bị thay đổi.
 
 Để thực hiện cuộc tấn công này, chúng ta cần thu thập hai yếu tố quan trọng từ Domain Controller (DC):
 
 - NTLM hash của tài khoản krbtgt – Đây là tài khoản chịu trách nhiệm phát hành vé (ticket) Kerberos. Nếu chúng ta có hash của tài khoản này, chúng ta có thể tự tạo vé hợp lệ.
 - Domain SID – Là định danh duy nhất của domain, cần thiết để xác thực vé.
 
-Bằng cách sử dụng công cụ như Mimikatz, chúng ta có thể dễ dàng trích xuất NTLM hash của tài khoản krbtgt và SID của domain.
+Bằng cách sử dụng công cụ của impacket là secretdump.py, lookupsid.py, chúng ta có thể dễ dàng trích xuất NTLM hash của tài khoản krbtgt và SID của domain.
 
 <p align="center"> <img src="/Images/Picture23.png" width="49%" /> <img src="/Images/Picture23-2.png" width="49%" /> </p>
 
-Sau khi thu thập được các thông tin cần thiết, ta giả mạo vé Kerberos bằng Golden Ticket bằng công cụ ticketer.py của Impacket. Một lợi thế của ticketer.py là vé giả được ghi vào tệp .ccache thay vì .kirbi ;vì vậy ta không phải chuyển đổi nó. 
+Sau khi thu thập được các thông tin cần thiết, ta giả mạo vé Kerberos bằng `Golden Ticket` bằng công cụ ticketer.py của Impacket. Một lợi thế của ticketer.py là vé giả được ghi vào tệp .ccache thay vì .kirbi ;vì vậy ta không phải chuyển đổi nó. 
 
 <p align="center">
     <img src="/Images/Picture24.png" width="49%" />
