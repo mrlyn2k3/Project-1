@@ -48,12 +48,18 @@ Truy cập vào trang chủ chính `home.phongbat.com' ta chỉ thấy được 
     <img src="/Images/Picture3-1.png" width="49%"  />
 </p>
 
-Tiến hành scandir xem có thư mục nào ẩn không ta tìm được một vài directory ẩn: `/robots.txt`,`/admin`.
-- ! còn thiếu ảnh
+Ta sử dụng  công cụ gobuster tiến hành scandir xem có thư mục nào ẩn không ta tìm được một vài directory ẩn: `/robots.txt`,`/admin`.
+
 ![](/Images/Picture4.png)
 
-Ta tìm được một trang web cho phép upload ảnh online.  Trang upload chỉ cho phép .jpg.
-Tuy nhiên, bypass bằng cách tải lên shell.php.jpg chúng ta có thể chiếm quyền Web Server.
+Thử kiểm tra robots.txt ta tìm được một trang web cho phép upload ảnh online.
+
+<p align="center">
+    <img src="/Images/Picture4-1.png" width="49%" />
+    <img src="/Images/Picture4-2.png" width="49%" />
+</p>
+
+Tuy nhiên,Trang upload chỉ cho phép .jpg. Bypass bằng cách tải lên shell.php.jpg chúng ta có thể chiếm quyền Web Server.
 
 
 <p align="center">
@@ -69,19 +75,19 @@ Tuy nhiên, bypass bằng cách tải lên shell.php.jpg chúng ta có thể chi
 #### **2.2.1. Initial Access .**
 *Leo thang đặc quyền:
 
-Vì chúng ta có quyền thấp nên cần phải nâng quyền lên `root` để có thể tiếp tục xâm nhập vào hệ thống nội bộ. Trong quá trình reconnaissance máy web, tìm thấy một file `config` chứa thông tin của user khác ở đường dẫn `/var/www/config`.
+Vì chúng ta có quyền thấp nên cần phải nâng quyền lên `root` để có thể tiếp tục xâm nhập vào hệ thống nội bộ. 
+
+Trong quá trình reconnaissance máy web, ta thử tìm kiếm các tệp, folder có từ khóa như user, password, domain... bằng lệnh `"grep -i 'password' /var/www/config"` thì thấy một file `config` chứa thông tin của user khác ở đường dẫn `/var/www/config`.
 Ta dùng `ssh` để chuyển sang user này xem tìm kiếm được thông tin gì không.
 
 ![](/Images/Picture9.png)
 
-User này được cấu hình chạy nano với sudo vì vậy ta dễ dàng lấy được quyền root, truy cập thư mục `/root`, ta tìm được credential của ip `12.3.3.10`
+User này được cấu hình chạy nano với sudo vì vậy ta dễ dàng nano để mở terminal (CTRL+R → CTRL+X → reset → sh) với quyền root, truy cập thư mục `/root`, ta tìm được credential của ip `12.3.3.10`
 
 ![](/Images/Picture10.png)
 ![](/Images/Picture10-3.png)
-<p align="center">
     <img src="/Images/Picture10-1.png"  />
     <img src="/Images/Picture10-2.png" />
-</p>
 
 Ta thử đăng nhập qua ssh sử dụng credential của ip `12.3.3.10`.
 
@@ -101,7 +107,7 @@ Ta tìm được 3 ip sau: `12.3.3.2`, `12.3.3.10` và `12.3.3.99` => hệ thố
 
 #### **2.2.3. Lateral Movement (T1021.001, T1570, T1534)**
 *Cắm agent vào client1:
-Tiếp theo ta sẽ sử dụng Havoc Framework để cắm agent vào máy `clien1` dễ dàng truy cập và duy trì sự hiện diện.
+Tiếp theo ta sẽ sử dụng Havoc Framework để cắm agent vào máy `clien1` dễ dàng truy cập và duy trì sự hiện diện. Ở đây chúng ta sẽ sử dụng listener `admin` với HTTP và cổng 12345.
 
 ![](/Images/Picture13.png)
 
