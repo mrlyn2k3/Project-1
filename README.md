@@ -40,8 +40,8 @@ Attacker có thể xâm nhập vào hệ thống thông qua 2 cách tiếp cận
 Truy cập vào trang chủ chính `home.phongbat.com' ta chỉ thấy được các giao diện thông thường, test qua vài lỗ hổng trong OWASP nhưng không có gì bất thường.
 
 <p align="center">
-    <img src="/Images/Picture3.png" />
-    <img src="/Images/Picture3-1.png"  />
+    <img src="/Images/Picture3.png" width="49%" />
+    <img src="/Images/Picture3-1.png" width="49%"  />
 </p>
 
 Tiến hành scandir xem có thư mục nào ẩn không ta tìm được một vài directory ẩn: `/robots.txt`,`/admin`.
